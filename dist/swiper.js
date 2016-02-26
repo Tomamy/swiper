@@ -20,7 +20,7 @@
      */
     function Swiper(options) {
         this.version = '1.4.1';
-        this._default = {container: '.swiper', item: '.item', direction: 'vertical', activeClass: 'active', threshold: 50, duration: 300};
+        this._default = {container: '.swiper', item: '.item', direction: 'vertical', activeClass: 'active',bounce: false,lazyLoading: false,loadingSrc: '../../b_waiting.gif', threshold: 50, duration: 300};
         this._options = extend(this._default, options);
         this._start = {};
         this._move = {};
@@ -69,6 +69,10 @@
         });
 
         me._activate(0);
+
+        if(me._options.lazyLoading) {
+            me._lazyLoadImage(); 
+        }
     };
 
     /**
@@ -84,6 +88,8 @@
 
             me.$container.style['-webkit-transition'] = 'none';
             me.$container.style.transition = 'none';
+            
+            me._bounce = true;
 
         }, false);
 
@@ -92,10 +98,21 @@
             me._move.y = e.changedTouches[0].pageY;
 
             var distance = me._move.y - me._start.y;
+
+            var realOffset = distance - me._offset;
+            if(me._options.bounce && me._current == 0 && realOffset >= 0 
+                || me._options.bounce && me._current == (me.count-1) && realOffset <= 0){
+                return; 
+            }
             var transform = 'translate3d(0, ' + (distance - me._offset) + 'px, 0)';
 
             if (me._options.direction === 'horizontal') {
                 distance = me._move.x - me._start.x;
+                realOffset = distance - me._offset;
+                if(me._options.bounce && me._current == 0 && realOffset >= 0 
+                    || me._options.bounce && me._current == (me.count-1) && realOffset <= 0){
+                    return; 
+                }
                 transform = 'translate3d(' + (distance - me._offset) + 'px, 0, 0)';
             }
 
@@ -106,6 +123,7 @@
         }, false);
 
         this.$container.addEventListener('touchend', function (e) {
+
             me._end.x = e.changedTouches[0].pageX;
             me._end.y = e.changedTouches[0].pageY;
 
@@ -118,8 +136,10 @@
             me._prev = me._current;
             if (distance > me._options.threshold) {
                 me._current = me._current === 0 ? 0 : --me._current;
+                me._lazyLoadImage();
             } else if (distance < -me._options.threshold) {
                 me._current = me._current < (me.count - 1) ? ++me._current : me._current;
+                me._lazyLoadImage();
             }
 
             me._show(me._current);
@@ -182,6 +202,27 @@
     };
 
     /**
+        lazy load image
+    **/
+    Swiper.prototype._lazyLoadImage = function(){
+        var obj = this.$items[this._current].querySelector(".swiper-lazy");         
+        if(obj.getAttribute("src")){
+            return; 
+        }
+        var loadDom = document.createElement("div");
+        loadDom.setAttribute("class","loading");
+        loadDom.innerHTML = '<img src="'+this._options.loadingSrc+'"/>';
+        this.$items[this._current].appendChild(loadDom);
+
+        var img = new Image();
+        img.onload = function(){
+            loadDom.remove();
+            obj.setAttribute("src",img.src);
+        }
+        img.src = obj.getAttribute("data-src");
+    }
+
+    /**
      * goto x page
      */
     Swiper.prototype.go = function (index) {
@@ -232,6 +273,20 @@
 
         return this;
     };
+
+    /**
+        get curent pos
+    **/
+    Swiper.prototype.getCurrent = function(){
+        return this._current; 
+    }
+
+    /**
+        get total item
+    **/
+    Swiper.prototype.getTotal = function(){
+        return this.count; 
+    }
 
     /**
      * simple `extend` method

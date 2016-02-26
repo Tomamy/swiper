@@ -1,0 +1,43 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+.container{
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background-color: #efeff4;
+}
+.item{
+    width: 100%;
+    float: left;
+    color: #ffffff;
+    background-color: #000000;
+}
+.desc-wrap {
+    width: 100%;
+    padding: 10px;
+    max-height: 100px;
+    overflow-y: auto;
+    font-size: 14px;
+    color: #fff;
+    background-color: #222;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+        
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+}
+.desc-wrap .count {
+    padding-right: 15px;
+    font-size: 18px;
+    display: inline-block;
+}

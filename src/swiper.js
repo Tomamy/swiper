@@ -100,8 +100,7 @@
             var distance = me._move.y - me._start.y;
 
             var realOffset = distance - me._offset;
-            if(me._options.bounce && me._current == 0 && realOffset >= 0 
-                || me._options.bounce && me._current == (me.count-1) && realOffset <= 0){
+            if(me._options.bounce && me._current === 0 && realOffset >= 0 || me._options.bounce && me._current == (me.count-1) && realOffset <= 0){
                 return; 
             }
             var transform = 'translate3d(0, ' + (distance - me._offset) + 'px, 0)';
@@ -109,8 +108,7 @@
             if (me._options.direction === 'horizontal') {
                 distance = me._move.x - me._start.x;
                 realOffset = distance - me._offset;
-                if(me._options.bounce && me._current == 0 && realOffset >= 0 
-                    || me._options.bounce && me._current == (me.count-1) && realOffset <= 0){
+                if(me._options.bounce && me._current === 0 && realOffset >= 0 || me._options.bounce && me._current == (me.count-1) && realOffset <= 0){
                     return; 
                 }
                 transform = 'translate3d(' + (distance - me._offset) + 'px, 0, 0)';
@@ -218,9 +216,9 @@
         img.onload = function(){
             loadDom.remove();
             obj.setAttribute("src",img.src);
-        }
+        };
         img.src = obj.getAttribute("data-src");
-    }
+    };
 
     /**
      * goto x page
@@ -279,14 +277,14 @@
     **/
     Swiper.prototype.getCurrent = function(){
         return this._current; 
-    }
+    };
 
     /**
         get total item
     **/
     Swiper.prototype.getTotal = function(){
         return this.count; 
-    }
+    };
 
     /**
      * simple `extend` method

@@ -28,33 +28,27 @@
           animation: none;
   opacity: 0;
 }
-
 .item img {
-    width: auto;
-    height: auto;
-    max-width: 98%;
-    max-height: 100%;
-    -ms-transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    position: absolute;
-    left: 50%;
-    top: 50%;
+  width: auto;
+  height: auto;
+  max-width: 98%;
+  max-height: 100%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  position: absolute;
+  left: 50%;
+  top: 50%;
 }
-
 .item .loading {
-    width: 30px;
-    height: 30px;
-    -ms-transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    position: absolute;
-    left: 50%;
-    top: 50%;
+  width: 30px;
+  height: 30px;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  position: absolute;
+  left: 50%;
+  top: 50%;
 }
 .item .loading img {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }

@@ -26,7 +26,19 @@
      */
     function Swiper(options) {
         this.version = '1.4.1';
-        this._default = {container: '.swiper', item: '.item', direction: 'vertical', activeClass: 'active',bounce: false,lazyLoading: false,loadingSrc: '../../b_waiting.gif', threshold: 50, duration: 300};
+        this._default = {
+            container: '.swiper', 
+            item: '.item', 
+            direction: 'vertical', 
+            activeClass: 'active',
+            bounce: false,
+            lazyLoading: false,
+            preloadImages: true,
+            loadingSrc: '../../b_waiting.gif', 
+            threshold: 50, 
+            duration: 300,
+            touchendCall: function(){}
+        };
         this._options = extend(this._default, options);
         this._start = {};
         this._move = {};
@@ -35,6 +47,7 @@
         this._current = 0;
         this._offset = 0;
         this._goto = -1;
+        this.imagesLoaded = [];
         this._eventHandlers = {};
 
         this.$container = document.querySelector(this._options.container);
@@ -147,6 +160,7 @@
             }
 
             me._show(me._current);
+            me._options.touchendCall();
 
         }, false);
 
@@ -206,10 +220,39 @@
     };
 
     /**
+        is exits
+    **/
+    Swiper.prototype._isExitsLoaded = function(pos){
+        for(var i=0;i<this.imagesLoaded.length;i++){
+            if(pos == this.imagesLoaded[i]){
+                return true; 
+            } 
+        } 
+        return false; 
+    }
+
+    /**
+        preload images
+    **/
+    Swiper.prototype._preloadImages = function (){
+        var count = this._current + 3;
+        count = count > this.count?this.count:count;
+        for(var i=this._current;i<count;i++){
+            if(this._isExitsLoaded(i)){
+                continue; 
+            }
+            var image = new Image();
+            image.src = this.$items[i].querySelector(".swiper-lazy").getAttribute("data-src");
+            this.imagesLoaded.push(i);
+        }
+    };
+
+    /**
         lazy load image
     **/
     Swiper.prototype._lazyLoadImage = function(){
         var obj = this.$items[this._current].querySelector(".swiper-lazy");         
+        this._preloadImages();
         if(obj.getAttribute("src")){
             return; 
         }
@@ -217,13 +260,17 @@
         loadDom.setAttribute("class","loading");
         loadDom.innerHTML = '<img src="'+this._options.loadingSrc+'"/>';
         this.$items[this._current].appendChild(loadDom);
-
         var img = new Image();
+        img.src = obj.getAttribute("data-src");
+        if(img.complete){
+            loadDom.remove();
+            obj.setAttribute("src",img.src);
+            return;
+        }
         img.onload = function(){
             loadDom.remove();
             obj.setAttribute("src",img.src);
         };
-        img.src = obj.getAttribute("data-src");
     };
 
     /**
